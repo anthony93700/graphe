@@ -3,8 +3,7 @@
 void lecture(struct grapheMA* pm,FILE* f){
 	int i = 0,y = 0,nb,r,t;	
 	fscanf(f,"%d",&(*pm).n);
-	fscanf(f,"%d",&nb);
-	printf("%d",nb);
+	fscanf(f,"%d",&(*pm).e);
 	for(i = 0;i<(*pm).n;i++){
 		//(*pm).sousgrapheConnexe[i] = 0;
 		for(y=0;y<(*pm).n;y++){
@@ -12,7 +11,7 @@ void lecture(struct grapheMA* pm,FILE* f){
 			(*pm).poids[i][y] = 0;
 		}
 	}
-	for(i = 0;i<nb;i++){
+	for(i = 0;i<(*pm).e;i++){
 		fscanf(f,"%d",&t);
 		fscanf(f,"%d",&r);
 		fscanf(f,"%d",&(*pm).poids[t][r]);
@@ -40,12 +39,12 @@ void makeFileDot(struct grapheMA m){
 	if(f==NULL){
 		exit(-1);
 	}
-	fprintf(f,"graph mon_graphe {\n");
+	fprintf(f,"digraph mon_graph {\n");
 	int y=0,i=0;
 	for(i = 0;i<NMAX;i++){
 		for(y=0;y<YMAX;y++){
-			if(m.adj[i][y]!=0){
-				fprintf(f,"%d -- %d;\n",i,y);			
+			if(m.adj[i][y]==1){
+				fprintf(f,"\t%d -> %d [label=%d];\n",i,y,m.poids[i][y]);			
 			}		
 		}
 	}
@@ -169,5 +168,129 @@ void ordre_Topologique(struct grapheMA m){
 		}
 	}
 
-}	
 }
+/*
+
+
+	Pour chaque sommet i faire
+  d[i] <- degré intérieur de i, niveau[i] <-0
+Fin Pour
+Pour i de 1 au nombre de sommets faire
+  Chercher un sommet j tel que d[j]=0
+  S'il n'en existe pas, le graphe comporte un cycle.
+  Sinon
+    d[j]<- -1
+    Pour tout sommet x successeur de j faire
+      d[x] <- d[x]-1 ; niveau[x] <- max(niveau[x],niveau[j]+1)
+    Fin Pour
+  Fin Si
+Fin Pour
+
+*/
+int max(int i,int y){
+	if(i>y)
+		return i;
+	else
+		return y;
+}
+int* tri_topologique(struct grapheMA m){
+	int i=0,y = 0;
+	int *d = NULL, *niveau =NULL,marquer = 0;
+	d = malloc(m.n * sizeof(int));
+	niveau = malloc(m.n * sizeof(int));
+	for(i = 0;i<m.n;i++){
+		d[i] = 0;
+		for(y=0;y<m.n;y++){
+			if(m.adj[y][i]==1)
+				d[i]++;
+		}
+		niveau[i]=0;	
+	}
+
+	for(i=0;i<m.n;i++){
+		if(d[i]==0){
+			d[i]=-1;
+			for(y = 0;y<m.n;y++){
+				if(m.adj[i][y]==1){
+					d[y]--;
+					niveau[y]= max(niveau[y],niveau[i]+1);
+				}
+			}
+		}
+	}
+	for(i=0;i<m.n;i++){
+		if(d[i]==-1){
+			for(i=0;i<m.n;i++){
+		if(d[i]==0){
+			d[i]=-1;
+			for(y = 0;y<m.n;y++){
+				if(m.adj[i][y]==1){
+					d[y]--;
+					niveau[y]= max(niveau[y],niveau[i]+1);
+				}
+			}
+		}
+	}
+		}
+	}
+	return niveau;
+}
+void BellmanFord(struct grapheMA* graph, int src){
+	int V = (*graph).n;
+	int E = (*graph).e;
+	int i = 0,j = 0,z = 0;
+	int dist[V];
+
+	for (i = 0; i < V; i++){
+		dist[i]   = INFINI;
+	}
+	dist[src] = 0;
+
+	for(z = 1 ; z < E ; z++){
+		for (i = 0; i < V; i++){
+			for (j = 0; j < V; j++){
+				int weight = (*graph).poids[i][j];
+				if (dist[i] != INFINI && dist[i] + weight < dist[j] && (*graph).adj[i][j] == 1)
+					dist[j] = dist[i] + weight;
+			}
+		}
+	}
+
+	for (i = 0; i < V; i++){
+			for (j = 0; j < V; j++){
+				int weight = (*graph).poids[i][j];
+				if (dist[i] != INFINI && dist[i] + weight < dist[j] && (*graph).adj[i][j] == 1)
+					printf("Il y a un cycle absorbant\n");
+			}
+		}
+	for(i=0;i<V;i++)
+		printf("%d : %d\n",i,dist[i]);
+}
+void Dijkstra(struct grapheMA g, int start){
+	int marquer[g.n] ,dist[g.n] ,i = 0 ,j = 0, SommetActif = start,SommetActifMoment = 0, PoidsCourtChemin = 0, z = 0;
+	for( i = 0 ; i < g.n ; i++){
+		marquer[i] = TRUE;
+		dist[i] = INFINI;
+	}
+	dist[SommetActif] = 0;
+	for(i = 0; i < g.n ; i++){
+			for(j = 0; j < g.n; j++){
+				if(g.adj[SommetActif][j] == 1 && dist[SommetActif] + g.poids[SommetActif][j] < dist[j]){
+					if(SommetActifMoment == SommetActif){
+						SommetActifMoment =  j;
+					}
+					dist[j] = dist[SommetActif] + g.poids[SommetActif][j];
+					if(dist[j] <=  dist[SommetActifMoment]){
+						SommetActifMoment = j;
+					}
+				}
+				
+			}
+		if(SommetActif != SommetActifMoment)
+			PoidsCourtChemin = dist[SommetActifMoment];
+		marquer[SommetActif] = FALSE;
+		SommetActif = SommetActifMoment;
+	}
+	for(i=0;i<g.n;i++)
+		printf("%d : %d\n PoidsPlusCourtChemin : %d \n",i,dist[i],PoidsCourtChemin);
+}	

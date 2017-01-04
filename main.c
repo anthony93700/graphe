@@ -6,10 +6,11 @@ int main(){
 	struct grapheMA m;
 	FILE * f = NULL;
 	f = fopen("fichier.txt","r+");
-	int num= 5,sommet = 0;
+	int num= 5,sommet = 0,i=0;
+	int *niveau = NULL;
 	lecture(&m,f);
 	while(num!=0){
-		printf("saisir un nombre.\n1 pour afficher le graphe\n2 pour créer le fichier dot\n3 pour appliquer l'algorithme DPS en ordre suffixe\n4 appliquer l'algorithme de DPS en ordrePrefixe\n5 pour appliquer Kosaraju\n0 pour quitter\n");
+		printf("saisir un nombre.\n1 pour afficher le graphe\n2 pour créer le fichier dot\n3 pour appliquer l'algorithme DPS en ordre suffixe\n4 appliquer l'algorithme de DPS en ordrePrefixe\n5 pour appliquer Kosaraju\n6pour appliquer BellmanFord\n0 pour quitter\n");
 		scanf("%d",&num);
 		switch(num){
 			case 0:
@@ -35,6 +36,13 @@ int main(){
 			case 5:
 			
 				Kosaraju_sharir(m);
+			break;
+			case 6:
+			
+				printf("sommet de départ :");
+				scanf("%d",&sommet);
+				printf("\n");
+				Dijkstra(m,sommet);
 			break;
 			default:
 				printf("vous avez tapez une mauvaise commande \n");
