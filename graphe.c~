@@ -267,29 +267,38 @@ void BellmanFord(struct grapheMA* graph, int src){
 		printf("%d : %d\n",i,dist[i]);
 }
 void Dijkstra(struct grapheMA g, int start){
-	int marquer[g.n] ,dist[g.n] ,i = 0 ,j = 0, SommetActif = start,SommetActifMoment = 0, PoidsCourtChemin = 0, z = 0;
+	int marquer[g.n] ,dist[g.n] ,i = 0 ,j = 0, SommetActif = start,SommetActifMomentA = 0,SommetActifMomentB = 0, PoidsCourtChemin = 0, z = 0;
 	for( i = 0 ; i < g.n ; i++){
 		marquer[i] = TRUE;
 		dist[i] = INFINI;
 	}
 	dist[SommetActif] = 0;
+	SommetActif = 1;
 	for(i = 0; i < g.n ; i++){
-			for(j = 0; j < g.n; j++){
-				if(g.adj[SommetActif][j] == 1 && dist[SommetActif] + g.poids[SommetActif][j] < dist[j]){
-					if(SommetActifMoment == SommetActif){
-						SommetActifMoment =  j;
+		for(j = 0; j < g.n; j++){
+			if(marquer[j]){
+				for(z = 0; z<g.n;z++){
+					if(g.adj[z][j] == 1 && dist[z] + g.poids[z][j] < dist[j]){
+						if(SommetActifMomentB == SommetActif){
+							SommetActifMomentB =  j;
+						}
+						dist[j] = dist[z] + g.poids[z][j];
+						if(dist[j] <=  dist[SommetActifMomentB]){
+							SommetActifMomentB = j;
+						}
 					}
-					dist[j] = dist[SommetActif] + g.poids[SommetActif][j];
-					if(dist[j] <=  dist[SommetActifMoment]){
-						SommetActifMoment = j;
-					}
-				}
+					if(g.adj[j][z] == 1 && dist[j] + g.poids[j][z] < dist[z]){
 				
+						dist[z] = dist[j] + g.poids[j][z];	
+					}			
+				}
 			}
-		if(SommetActif != SommetActifMoment)
-			PoidsCourtChemin = dist[SommetActifMoment];
+			if(SommetActif != SommetActifMomentB)
+				PoidsCourtChemin = dist[SommetActifMomentB];
 		marquer[SommetActif] = FALSE;
-		SommetActif = SommetActifMoment;
+		SommetActif = SommetActifMomentB;
+		}
+		
 	}
 	for(i=0;i<g.n;i++)
 		printf("%d : %d\n PoidsPlusCourtChemin : %d \n",i,dist[i],PoidsCourtChemin);
