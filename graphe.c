@@ -169,24 +169,6 @@ void ordre_Topologique(struct grapheMA m){
 	}
 
 }
-/*
-
-
-	Pour chaque sommet i faire
-  d[i] <- degré intérieur de i, niveau[i] <-0
-Fin Pour
-Pour i de 1 au nombre de sommets faire
-  Chercher un sommet j tel que d[j]=0
-  S'il n'en existe pas, le graphe comporte un cycle.
-  Sinon
-    d[j]<- -1
-    Pour tout sommet x successeur de j faire
-      d[x] <- d[x]-1 ; niveau[x] <- max(niveau[x],niveau[j]+1)
-    Fin Pour
-  Fin Si
-Fin Pour
-
-*/
 int max(int i,int y){
 	if(i>y)
 		return i;
