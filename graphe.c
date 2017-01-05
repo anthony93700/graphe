@@ -255,8 +255,6 @@ void Dijkstra(struct grapheMA g, int start){
 		dist[i] = INFINI;
 	}
 	dist[SommetActif] = 0;
-	SommetActif = 1;
-	for(i = 0; i < g.n ; i++){
 		for(j = 0; j < g.n; j++){
 			if(marquer[j]){
 				for(z = 0; z<g.n;z++){
@@ -280,8 +278,6 @@ void Dijkstra(struct grapheMA g, int start){
 		marquer[SommetActif] = FALSE;
 		SommetActif = SommetActifMomentB;
 		}
-		
-	}
 	for(i=0;i<g.n;i++)
 		printf("%d : %d\n PoidsPlusCourtChemin : %d \n",i,dist[i],PoidsCourtChemin);
 }	

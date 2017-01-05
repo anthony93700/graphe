@@ -42,7 +42,14 @@ int main(){
 				printf("sommet de départ :");
 				scanf("%d",&sommet);
 				printf("\n");
-				Dijkstra(m,sommet,6);
+				Dijkstra(m,sommet);
+			break;
+			case 7:
+			
+				printf("sommet de départ :");
+				scanf("%d",&sommet);
+				printf("\n");
+				BellmanFord(m,sommet);
 			break;
 			default:
 				printf("vous avez tapez une mauvaise commande \n");

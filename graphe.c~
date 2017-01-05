@@ -169,24 +169,6 @@ void ordre_Topologique(struct grapheMA m){
 	}
 
 }
-/*
-
-
-	Pour chaque sommet i faire
-  d[i] <- degré intérieur de i, niveau[i] <-0
-Fin Pour
-Pour i de 1 au nombre de sommets faire
-  Chercher un sommet j tel que d[j]=0
-  S'il n'en existe pas, le graphe comporte un cycle.
-  Sinon
-    d[j]<- -1
-    Pour tout sommet x successeur de j faire
-      d[x] <- d[x]-1 ; niveau[x] <- max(niveau[x],niveau[j]+1)
-    Fin Pour
-  Fin Si
-Fin Pour
-
-*/
 int max(int i,int y){
 	if(i>y)
 		return i;
@@ -272,9 +254,7 @@ void Dijkstra(struct grapheMA g, int start){
 		marquer[i] = TRUE;
 		dist[i] = INFINI;
 	}
-	dist[SommetActif] = 0;
 	SommetActif = 1;
-	for(i = 0; i < g.n ; i++){
 		for(j = 0; j < g.n; j++){
 			if(marquer[j]){
 				for(z = 0; z<g.n;z++){
@@ -298,8 +278,6 @@ void Dijkstra(struct grapheMA g, int start){
 		marquer[SommetActif] = FALSE;
 		SommetActif = SommetActifMomentB;
 		}
-		
-	}
 	for(i=0;i<g.n;i++)
 		printf("%d : %d\n PoidsPlusCourtChemin : %d \n",i,dist[i],PoidsCourtChemin);
 }	
