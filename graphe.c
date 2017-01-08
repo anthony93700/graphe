@@ -125,59 +125,33 @@ int DPS(struct grapheMA m,int sommet,int b){
 		return 	ordresuffixe[incr];
 	}			
 }
-void ordre_Topologique(struct grapheMA m){
-
-	int i=0,y=0, mark=0, valTri = 0;
-	int flag = 0;
-
-	int tri_topo[m.n];
-
-	/* On prend chaque colonne du graphe pour vérifier les prédécesseurs */
-	for(i=0; i<m.n; i++){
-
-		flag = 0;	
-
-		for(y=0; y<m.n; y++){
-			
-			/* Si une autre valeur que -1 en prédécésseur est trouvée */
-			if(m.adj[y][i] != -1){
-				flag = 1;
-				break;
-			}
-	
-		}
-
-		/* Cas ou il n'y a pas de prédécésseurs dans la colonne */
-		if(flag == 0){
-
-			tri_topo[valTri] = y;
-
-			for(i=0; i<m.n; i++){
-				for(y=0; y<m.n; y++){
-					
-					
-
-					if(y == valTri){
-						m.adj[valTri][i] = 0;
-					}
-				}
-			}
-
-			valTri++;		
-	
-		}
-	}
-
-}
 int max(int i,int y){
 	if(i>y)
 		return i;
 	else
 		return y;
 }
+/*#-- Etape 1, rechercher des noeuds sans predécesseur (NSP)
+        NSP = []
+        for name, n in self.__noeuds.items() :
+            if n.degre_pred == 0 :
+                NSP.append( n )
+        #-- Etape 2, tant qu'il y a des NSP (NSP_i)
+        while len( NSP ) :
+        #--  a) chercher ses successeurs (S_i)
+            NSP_i = NSP.pop()
+            ordre.append( NSP_i )
+            S = NSP_i.liste_succ()
+        #--  b) pour chaque S_i de S, retirer le prédecesseur NSP_i
+            for S_i in S :
+                S_i.retirer_pred( NSP_i )
+        #--  c) Si le degré_des_prédécesseurs de S_i = 0, alors ajouter S_i à NSP
+                if S_i.degre_pred == 0 :
+                    NSP.append( S_i )*/
 int* tri_topologique(struct grapheMA m){
 	int i=0,y = 0;
 	int *d = NULL, *niveau =NULL,marquer = 0;
+	int niveaufinal[m.n][m.n];
 	d = malloc(m.n * sizeof(int));
 	niveau = malloc(m.n * sizeof(int));
 	for(i = 0;i<m.n;i++){
@@ -200,22 +174,134 @@ int* tri_topologique(struct grapheMA m){
 			}
 		}
 	}
-	for(i=0;i<m.n;i++){
 		if(d[i]==-1){
 			for(i=0;i<m.n;i++){
-		if(d[i]==0){
-			d[i]=-1;
-			for(y = 0;y<m.n;y++){
-				if(m.adj[i][y]==1){
-					d[y]--;
-					niveau[y]= max(niveau[y],niveau[i]+1);
+				if(d[i]==0){
+					d[i]=-1;
+					for(y = 0;y<m.n;y++){
+						if(m.adj[i][y]==1){
+							d[y]--;
+							niveau[y]= max(niveau[y],niveau[i]+1);
+						}
+					}
 				}
 			}
 		}
+	for(i=0;i<(m).n;i++){
+					printf("%d : %d\n",i,niveau[i]);
+				}
+	return niveau;
+}
+int tritopo(struct grapheMA *g, int *tabOrdre){
+
+	int i;
+	int *sommetRestant=NULL;
+	sommetRestant= malloc(g->nbSommet * sizeof(int));
+
+
+	//Matrice de nbSommet à 1
+	for(i=0; i<g->n; i++){
+		sommetRestant[i]=1;
 	}
+
+
+
+	int sommetChoisi;
+	int j=0;
+	do{
+
+		sommetChoisi=sommetSansPred(g,sommetRestant);
+		if(sommetChoisi!=-1){
+			sommetRestant[sommetChoisi]=0;
+			tabOrdre[j]=sommetChoisi;
+			j++;
+		}
+
+	}
+	while(tabVide(sommetRestant,g->n)==1 && sommetChoisi !=-1 );
+
+	if(tabVide(sommetRestant,g->n)!=0)
+		return 0;
+	else
+		return 1;
+
+}
+
+int sommetSansPred(struct grapheMA *g, int *sommetRestant){
+	int i;
+	int j;
+	int test = 0;
+
+	for(j=0; j< g->n; j++){
+
+		for(i=0; i<g->n && test==0; i++){
+			if(g->adj[i][j]==1 && sommetRestant[i]==1){
+				test =1;
+			}
+
+		}
+		if(test==0 && sommetRestant[j]==1)
+			return j;
+
+		test=0;
+	}
+
+	return -1;
+}
+int tabVide (int *tab, int nbSommet){
+
+	int i;
+
+	for(i=0; i<nbSommet; i++){
+		if(tab[i]==1)
+			return 1; //return tableau non vide donc contient au moins un sommet
+	}
+
+	return 0; // contient aucun sommet
+}
+void Bellman(struct grapheMA *g, int sommetDepart, int *tabOrdre){
+    int nombreOperations = 0;
+
+    int i, j, posSommetDepart;
+	int *distance=malloc(g->n * sizeof(int));
+    int *tabPredecesseur= malloc(g->n * sizeof(int));
+
+	for(i=0; i<g->n; i++){
+        nombreOperations++;
+		distance[i]=INFINI;
+		nombreOperations++;
+		tabPredecesseur[i]=i;
+		nombreOperations++;
+		if(tabOrdre[i]==sommetDepart)
+        {
+            nombreOperations++;
+            posSommetDepart=i;
+            nombreOperations++;
+        }
+	}
+	distance[posSommetDepart]=0;
+	tabPredecesseur[posSommetDepart]=posSommetDepart;
+	nombreOperations+=2;
+
+	for(i=posSommetDepart; i<g->n; i++){
+        nombreOperations++;
+		for(j=0; j<g->n;j++){
+		    nombreOperations++;
+			if(g->adj[i][j] == 1 && (g->poids[i][j] + distance[i])<distance[j]){
+			    nombreOperations+=3;
+				distance[j]=(g->poids[i][j] + distance[i]);
+                nombreOperations+=2;
+				tabPredecesseur[j]=i;
+				nombreOperations++;
+
+			}
 		}
 	}
-	return niveau;
+	int k;
+    printf("les plus courts chemin a partir du sommet %d ont les valeurs suivantes: \n", sommetDepart+1);
+    for(k=0;k<g->n;k++)
+        printf("de %d au sommet %d : %d\n", sommetDepart+1, k+1, distance[k]);
+    printf("l'execution du programme pour votre graphe a necessite %d operations\n", nombreOperations);
 }
 void BellmanFord(struct grapheMA* graph, int src){
 	int V = (*graph).n;
@@ -228,7 +314,7 @@ void BellmanFord(struct grapheMA* graph, int src){
 	}
 	dist[src] = 0;
 
-	for(z = 1 ; z < E ; z++){
+	for(z = 0 ; z < E ; z++){
 		for (i = 0; i < V; i++){
 			for (j = 0; j < V; j++){
 				int weight = (*graph).poids[i][j];

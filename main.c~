@@ -49,8 +49,13 @@ int main(){
 				printf("sommet de départ :");
 				scanf("%d",&sommet);
 				printf("\n");
-				BellmanFord(m,sommet);
+				BellmanFord(&m,sommet);
 			break;
+			case 8:
+				niveau=malloc(m.n*sizeof(int));
+				for(i=0;i<m.n;i++)
+					niveau[i]=0;
+				Bellman(&m,0,niveau);
 			default:
 				printf("vous avez tapez une mauvaise commande \n");
 			break;

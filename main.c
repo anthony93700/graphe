@@ -51,6 +51,10 @@ int main(){
 				printf("\n");
 				BellmanFord(&m,sommet);
 			break;
+			case 8:
+				niveau=malloc(m.n*sizeof(int));
+				tritopo(&m,niveau);
+				Bellman(&m,0,niveau);
 			default:
 				printf("vous avez tapez une mauvaise commande \n");
 			break;

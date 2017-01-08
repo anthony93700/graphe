@@ -28,4 +28,6 @@ void Kosaraju_sharir(struct grapheMA m);
 void ordre_Topologique(struct grapheMA m);
 int* tri_topologique(struct grapheMA m);
 void BellmanFord(struct grapheMA* graph, int src);
-void Dijkstra(struct grapheMA g, int start,int fin);
+void Dijkstra(struct grapheMA g, int start);
+void Bellman(struct grapheMA *g, int sommetDepart, int *tabOrdre);
+int tritopo(graphe *g, int *tabOrdre);

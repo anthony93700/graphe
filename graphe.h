@@ -29,3 +29,5 @@ void ordre_Topologique(struct grapheMA m);
 int* tri_topologique(struct grapheMA m);
 void BellmanFord(struct grapheMA* graph, int src);
 void Dijkstra(struct grapheMA g, int start);
+void Bellman(struct grapheMA *g, int sommetDepart, int *tabOrdre);
+int tritopo(struct grapheMA *g, int *tabOrdre);
