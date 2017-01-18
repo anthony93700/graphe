@@ -4,9 +4,9 @@ digraph mon_graph {
 	2 -> 3 [label=-9];
 	3 -> 4 [label=16];
 	4 -> 5 [label=1];
-	5 -> 6 [label=45];
+	5 -> 6 [label=21];
 	6 -> 7 [label=41];
 	7 -> 8 [label=6];
 	8 -> 9 [label=-9];
-	9 -> 10 [label=65536];
+	9 -> 10 [label=51];
 }

@@ -21,13 +21,16 @@ static struct grapheMA{
 };
 
 void lecture(struct grapheMA* pm,FILE* f);
-void affichage(struct grapheMA m);
-void makeFileDot(struct grapheMA m);
+void affichage(struct grapheMA m,char * chemin);
+void makeFileDot(struct grapheMA m, char * chemin);
 int DPS(struct grapheMA m,int sommet,int b);
 void Kosaraju_sharir(struct grapheMA m);
 void ordre_Topologique(struct grapheMA m);
 int* tri_topologique(struct grapheMA m);
-void BellmanFord(struct grapheMA* graph, int src);
-void Dijkstra(struct grapheMA g, int start);
-void Bellman(struct grapheMA *g, int sommetDepart, int *tabOrdre);
-int tritopo(graphe *g, int *tabOrdre);
+int * BellmanFord(struct grapheMA* graph, int src);
+int * Dijkstra(struct grapheMA g, int start);
+int * Bellman(struct grapheMA *g, int sommetDepart, int *tabOrdre);
+int tritopo(struct grapheMA *g, int *tabOrdre);
+struct grapheMA TableauTographe(struct grapheMA g,int * tab);
+char * ecriture(struct grapheMA g);
+int poidsPositif(struct grapheMA g);
